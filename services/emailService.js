@@ -2,7 +2,11 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
 
-    service: "gmail",
+    host: "smtp.gmail.com",
+
+    port: 465,
+
+    secure: true,
 
     auth: {
 
@@ -10,7 +14,13 @@ const transporter = nodemailer.createTransport({
 
         pass: process.env.EMAIL_PASS
 
-    }
+    },
+
+    connectionTimeout: 10000,
+
+    greetingTimeout: 10000,
+
+    socketTimeout: 10000
 
 });
 
@@ -77,59 +87,38 @@ async function sendCustomerEmail(booking){
         <table style="width:100%;border-collapse:collapse;">
 
             <tr>
-
                 <td><b>Booking ID</b></td>
-
                 <td>${booking.bookingId}</td>
-
             </tr>
 
             <tr>
-
                 <td><b>Date</b></td>
-
                 <td>${booking.date}</td>
-
             </tr>
 
             <tr>
-
                 <td><b>Time</b></td>
-
                 <td>${booking.time}</td>
-
             </tr>
 
             <tr>
-
                 <td><b>Tattoo</b></td>
-
                 <td>${booking.tattooType}</td>
-
             </tr>
 
             <tr>
-
                 <td><b>Placement</b></td>
-
                 <td>${booking.placement}</td>
-
             </tr>
 
             <tr>
-
                 <td><b>Style</b></td>
-
                 <td>${booking.style}</td>
-
             </tr>
 
             <tr>
-
                 <td><b>Estimated Duration</b></td>
-
                 <td>${booking.duration} minutes</td>
-
             </tr>
 
         </table>
@@ -176,35 +165,43 @@ async function sendCustomerEmail(booking){
 
     `;
 
-    await transporter.sendMail({
+    console.log("➡ Starting customer email...");
 
-        from: process.env.EMAIL_USER,
+    try {
 
-        to: booking.email,
+        const info = await transporter.sendMail({
 
-        subject: "ZuzInk Booking Confirmation",
+            from: process.env.EMAIL_USER,
 
-        html,
+            to: booking.email,
 
-        attachments:
+            subject: "ZuzInk Booking Confirmation",
 
-        booking.attachments
+            html,
 
-        ?
+            attachments:
+                booking.attachments
+                ? booking.attachments.map(file => ({
+                    filename: file.originalname,
+                    path: file.path
+                }))
+                : []
 
-        booking.attachments.map(file=>({
+        });
 
-            filename:file.originalname,
+        console.log("✅ Customer email sent!");
+        console.log(info.messageId);
 
-            path:file.path
+    }
 
-        }))
+    catch(err){
 
-        :
+        console.error("❌ Customer email failed:");
+        console.error(err);
 
-        []
+        throw err;
 
-    });
+    }
 
 }
 /* ==========================
@@ -288,35 +285,43 @@ async function sendStudioEmail(booking){
 
     `;
 
-    await transporter.sendMail({
+    console.log("➡ Starting studio email...");
 
-        from: process.env.EMAIL_USER,
+    try {
 
-        to: process.env.EMAIL_USER,
+        const info = await transporter.sendMail({
 
-        subject: `New Booking - ${booking.name}`,
+            from: process.env.EMAIL_USER,
 
-        html,
+            to: process.env.EMAIL_USER,
 
-        attachments:
+            subject: `New Booking - ${booking.name}`,
 
-        booking.attachments
+            html,
 
-        ?
+            attachments:
+                booking.attachments
+                ? booking.attachments.map(file => ({
+                    filename: file.originalname,
+                    path: file.path
+                }))
+                : []
 
-        booking.attachments.map(file => ({
+        });
 
-            filename: file.originalname,
+        console.log("✅ Studio email sent!");
+        console.log(info.messageId);
 
-            path: file.path
+    }
 
-        }))
+    catch(err){
 
-        :
+        console.error("❌ Studio email failed:");
+        console.error(err);
 
-        []
+        throw err;
 
-    });
+    }
 
 }
 

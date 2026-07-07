@@ -599,17 +599,8 @@ attachments:req.files || []
    Send Emails
 -------------------------- */
 
-await sendCustomerEmail(
-
-emailBooking
-
-);
-
-await sendStudioEmail(
-
-emailBooking
-
-);
+ await sendCustomerEmail(emailBooking);
+ await sendStudioEmail(emailBooking);
 
 /* -------------------------
    Delete Temp Files

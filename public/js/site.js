@@ -148,63 +148,7 @@ faqItems.forEach(item=>{
 
 });
 
-/*==================================================
-LIGHTBOX
-==================================================*/
 
-const lightbox =
-document.createElement("div");
-
-lightbox.className="lightbox";
-
-const lightboxImage =
-document.createElement("img");
-
-lightbox.appendChild(
-
-lightboxImage
-
-);
-
-document.body.appendChild(
-
-lightbox
-
-);
-
-galleryImages.forEach(image=>{
-
-    image.addEventListener(
-
-    "click",
-
-    ()=>{
-
-        lightboxImage.src=image.src;
-
-        lightbox.classList.add(
-
-        "active"
-
-        );
-
-    });
-
-});
-
-lightbox.addEventListener(
-
-"click",
-
-()=>{
-
-    lightbox.classList.remove(
-
-    "active"
-
-    );
-
-});
 /*==================================================
 TRANSLATIONS
 ==================================================*/
