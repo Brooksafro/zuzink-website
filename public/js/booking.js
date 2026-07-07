@@ -1,59 +1,58 @@
-/*==================================================
-ZUZINK
-BOOKING.JS
-==================================================*/
-
 "use strict";
 
-/*==================================================
-CONFIG
-==================================================*/
+/* ==========================================
+   CONFIG
+========================================== */
 
-const API="/api";
+const API = "/api";
 
-let calendar=null;
+let calendar = null;
+let selectedDate = null;
 
-let selectedDate=null;
+/* ==========================================
+   ELEMENTS
+========================================== */
 
-/*==================================================
-ELEMENTS
-==================================================*/
+const bookingForm = document.getElementById("bookingForm");
 
-const bookingForm=
-document.getElementById("bookingForm");
+const calendarElement = document.getElementById("calendar");
 
-const calendarElement=
-document.getElementById("calendar");
+const tattooType = document.getElementById("tattooType");
+const placement = document.getElementById("placement");
+const style = document.getElementById("style");
+const time = document.getElementById("time");
 
-const tattooType=
-document.getElementById("tattooType");
-
-const placement=
-document.getElementById("placement");
-
-const style=
-document.getElementById("style");
-
-const time=
-document.getElementById("time");
-
-const selectedDateInput=
+const selectedDateInput =
 document.getElementById("selectedDate");
 
-const preview=
-document.getElementById("preview");
-
-const imageInput=
+const imageInput =
 document.getElementById("referenceImages");
 
-const bookingMessage=
+const preview =
+document.getElementById("preview");
+
+const bookingMessage =
 document.getElementById("bookingMessage");
 
-/*==================================================
-STATIC OPTIONS
-==================================================*/
+const confirmButton =
+document.getElementById("confirmButton");
 
-const placements=[
+/* ==========================================
+   STATIC DATA
+========================================== */
+
+const tattooTypes = [
+
+"Fine Line Text",
+"5 cm",
+"10 cm",
+"15 cm",
+"20 cm",
+"Big Tattoo"
+
+];
+
+const placements = [
 
 "Arm",
 "Forearm",
@@ -72,147 +71,252 @@ const placements=[
 
 ];
 
-const styles=[
+const styles = [
 
 "Fine Line",
-
 "Minimal",
-
 "Blackwork",
-
 "Realism",
-
 "Traditional",
-
 "Neo Traditional",
-
 "Anime",
-
 "Lettering",
-
 "Geometric",
-
 "Other"
 
 ];
 
-/*==================================================
-LOAD DROPDOWNS
-==================================================*/
+/* ==========================================
+   HELPERS
+========================================== */
 
-async function loadTattooTypes(){
+function showMessage(message,color="#C7A66A"){
 
-    try{
+bookingMessage.innerHTML=message;
+bookingMessage.style.color=color;
 
-        const response=
+}
 
-        await fetch(
+function clearMessage(){
 
-            API+"/tattoos"
+bookingMessage.innerHTML="";
 
-        );
+}
 
-        const data=
+/* ==========================================
+   LOAD SELECTS
+========================================== */
 
-        await response.json();
+function loadTattooTypes(){
 
-        tattooType.innerHTML=
+tattooType.innerHTML=
+'<option value="">Tattoo Size</option>';
 
-        '<option value="">Tattoo Size</option>';
+tattooTypes.forEach(type=>{
 
-        data.tattoos.forEach(type=>{
+tattooType.innerHTML+=
+`<option value="${type}">${type}</option>`;
 
-            tattooType.innerHTML+=`
-
-            <option value="${type.name}">
-
-            ${type.name}
-
-            </option>
-
-            `;
-
-        });
-
-    }
-
-    catch(err){
-
-        console.error(err);
-
-    }
+});
 
 }
 
 function loadPlacements(){
 
-    placement.innerHTML=
+placement.innerHTML=
+'<option value="">Placement</option>';
 
-    '<option value="">Placement</option>';
+placements.forEach(item=>{
 
-    placements.forEach(item=>{
+placement.innerHTML+=
+`<option value="${item}">${item}</option>`;
 
-        placement.innerHTML+=`
-
-        <option value="${item}">
-
-        ${item}
-
-        </option>
-
-        `;
-
-    });
+});
 
 }
 
 function loadStyles(){
 
-    style.innerHTML=
+style.innerHTML=
+'<option value="">Tattoo Style</option>';
 
-    '<option value="">Tattoo Style</option>';
+styles.forEach(item=>{
 
-    styles.forEach(item=>{
+style.innerHTML+=
+`<option value="${item}">${item}</option>`;
 
-        style.innerHTML+=`
+});
 
-        <option value="${item}">
+}
 
-        ${item}
+/* ==========================================
+   IMAGE PREVIEW
+========================================== */
 
-        </option>
+imageInput.addEventListener(
 
-        `;
+"change",
 
-    });
+()=>{
 
-}/*==================================================
-CALENDAR
-==================================================*/
+preview.innerHTML="";
 
-function initializeCalendar(){
+[...imageInput.files]
 
-    if(!calendarElement) return;
+.slice(0,5)
 
-    calendar=new FullCalendar.Calendar(
+.forEach(file=>{
+
+const reader=new FileReader();
+
+reader.onload=e=>{
+
+const wrapper=
+document.createElement("div");
+
+wrapper.className="previewItem";
+
+const img=
+document.createElement("img");
+
+img.src=e.target.result;
+
+wrapper.appendChild(img);
+
+preview.appendChild(wrapper);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+}
+
+);
+/* ==========================================
+   CALENDAR
+========================================== */
+
+function initializeCalendar() {
+
+    if (!calendarElement) return;
+
+    calendar = new FullCalendar.Calendar(
 
         calendarElement,
 
         {
 
-            initialView:"dayGridMonth",
+            initialView: "dayGridMonth",
 
-            height:"auto",
+            height: "auto",
 
-            selectable:true,
+            selectable: true,
 
-            dateClick:async function(info){
+            nowIndicator: true,
 
-                selectedDate=info.dateStr;
+            fixedWeekCount: false,
 
-                selectedDateInput.value=selectedDate;
+            showNonCurrentDates: false,
+
+            headerToolbar: {
+
+                left: "prev,next",
+
+                center: "title",
+
+                right: "today"
+
+            },
+
+            buttonText: {
+
+                today: "Today"
+
+            },
+
+            dateClick: async function(info) {
+
+                const today = new Date();
+
+                today.setHours(0,0,0,0);
+
+                if(info.date < today){
+
+                    showMessage(
+
+                        "You cannot book past dates.",
+
+                        "#ff6b6b"
+
+                    );
+
+                    return;
+
+                }
+
+                clearMessage();
+
+                selectedDate = info.dateStr;
+
+                selectedDateInput.value = selectedDate;
+
+                document
+
+                .querySelectorAll(".selected-date")
+
+                .forEach(day=>{
+
+                    day.classList.remove(
+
+                        "selected-date"
+
+                    );
+
+                });
+
+                info.dayEl.classList.add(
+
+                    "selected-date"
+
+                );
 
                 await loadAvailableTimes();
+
+            },
+
+            dayCellDidMount:function(info){
+
+                const today = new Date();
+
+                today.setHours(0,0,0,0);
+
+                if(info.date < today){
+
+                    info.el.classList.add(
+
+                        "past-date"
+
+                    );
+
+                }
+
+                if(
+
+                    info.date.toDateString() ===
+
+                    today.toDateString()
+
+                ){
+
+                    info.el.classList.add(
+
+                        "today-date"
+
+                    );
+
+                }
 
             }
 
@@ -224,83 +328,83 @@ function initializeCalendar(){
 
 }
 
-/*==================================================
-AVAILABLE TIMES
-==================================================*/
+/* ==========================================
+   LOAD BOOKINGS
+========================================== */
 
-async function loadAvailableTimes(){
-
-    time.innerHTML=
-
-    "<option>Loading...</option>";
-
-    if(!selectedDate){
-
-        time.innerHTML=
-
-        "<option>Select a date first</option>";
-
-        return;
-
-    }
-
-    if(!tattooType.value){
-
-        time.innerHTML=
-
-        "<option>Select tattoo size first</option>";
-
-        return;
-
-    }
+async function loadAppointments(){
 
     try{
 
-        const response=
+        const response = await fetch(
 
-        await fetch(
-
-`${API}/available-slots?date=${selectedDate}&tattooType=${encodeURIComponent(tattooType.value)}`
+            API + "/appointments"
 
         );
 
-        const data=
+        const data = await response.json();
 
-        await response.json();
-
-        time.innerHTML="";
-
-        if(
-
-            !data.success ||
-
-            data.slots.length===0
-
-        ){
-
-            time.innerHTML=
-
-            "<option>No available times</option>";
+        if(!data.success){
 
             return;
 
         }
 
-        time.innerHTML=
+        calendar.removeAllEvents();
 
-        '<option value="">Select Time</option>';
+        const dayCounter = {};
 
-        data.slots.forEach(slot=>{
+        data.bookings.forEach(booking=>{
 
-            time.innerHTML+=`
+            calendar.addEvent({
 
-            <option value="${slot}">
+                title:"Booked",
 
-            ${slot}
+                start:booking.start,
 
-            </option>
+                end:booking.end,
 
-            `;
+                display:"background",
+
+                color:"#7A0019"
+
+            });
+
+            const day =
+
+            booking.start.substring(0,10);
+
+            dayCounter[day] =
+
+            (dayCounter[day] || 0) + 1;
+
+        });
+
+        Object.keys(dayCounter)
+
+        .forEach(day=>{
+
+            if(dayCounter[day] >= 8){
+
+                const cell =
+
+                document.querySelector(
+
+                    `[data-date="${day}"]`
+
+                );
+
+                if(cell){
+
+                    cell.classList.add(
+
+                        "fully-booked"
+
+                    );
+
+                }
+
+            }
 
         });
 
@@ -310,74 +414,215 @@ async function loadAvailableTimes(){
 
         console.error(err);
 
-        time.innerHTML=
+    }
 
-        "<option>Unable to load times</option>";
+}
+/* ==========================================
+   AVAILABLE TIMES
+========================================== */
+
+async function loadAvailableTimes(){
+
+    time.disabled = true;
+
+    time.innerHTML =
+
+    `<option>
+
+        Loading available times...
+
+    </option>`;
+
+    if(!selectedDate){
+
+        time.innerHTML =
+
+        `<option>
+
+            Select a date first
+
+        </option>`;
+
+        time.disabled = false;
+
+        return;
+
+    }
+
+    if(!tattooType.value){
+
+        time.innerHTML =
+
+        `<option>
+
+            Select tattoo size first
+
+        </option>`;
+
+        time.disabled = false;
+
+        return;
+
+    }
+
+    try{
+
+        const response = await fetch(
+
+            `${API}/available-slots?date=${selectedDate}&tattooType=${encodeURIComponent(tattooType.value)}`
+
+        );
+
+        const data = await response.json();
+
+        time.innerHTML = "";
+
+        if(
+
+            !data.success ||
+
+            data.slots.length === 0
+
+        ){
+
+            time.innerHTML =
+
+            `<option>
+
+                No available times
+
+            </option>`;
+
+            time.disabled = false;
+
+            return;
+
+        }
+
+        const placeholder =
+
+        document.createElement(
+
+            "option"
+
+        );
+
+        placeholder.value = "";
+
+        placeholder.textContent =
+
+        "Select Time";
+
+        placeholder.selected = true;
+
+        placeholder.disabled = true;
+
+        time.appendChild(
+
+            placeholder
+
+        );
+
+        data.slots.forEach(slot=>{
+
+            const option =
+
+            document.createElement(
+
+                "option"
+
+            );
+
+            option.value = slot;
+
+            option.textContent = slot;
+
+            time.appendChild(
+
+                option
+
+            );
+
+        });
+
+        time.disabled = false;
+
+        showMessage(
+
+            `${data.slots.length} available time${data.slots.length===1?"":"s"} found.`,
+
+            "#69db7c"
+
+        );
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        time.innerHTML =
+
+        `<option>
+
+            Unable to load available times
+
+        </option>`;
+
+        time.disabled = false;
+
+        showMessage(
+
+            "Unable to contact the booking server.",
+
+            "#ff6b6b"
+
+        );
 
     }
 
 }
 
-/*==================================================
-IMAGE PREVIEW
-==================================================*/
-
-imageInput.addEventListener(
-
-"change",
-
-()=>{
-
-    preview.innerHTML="";
-
-    [...imageInput.files]
-
-    .slice(0,5)
-
-    .forEach(file=>{
-
-        const reader=
-
-        new FileReader();
-
-        reader.onload=e=>{
-
-            const img=
-
-            document.createElement("img");
-
-            img.src=e.target.result;
-
-            preview.appendChild(img);
-
-        };
-
-        reader.readAsDataURL(file);
-
-    });
-
-});
-
-/*==================================================
-EVENTS
-==================================================*/
+/* ==========================================
+   EVENTS
+========================================== */
 
 tattooType.addEventListener(
 
-"change",
+    "change",
 
-loadAvailableTimes
+    async()=>{
+
+        if(selectedDate){
+
+            await loadAvailableTimes();
+
+        }
+
+    }
 
 );
-/*==================================================
-BOOKING SUBMIT
-==================================================*/
+
+time.addEventListener(
+
+    "change",
+
+    ()=>{
+
+        clearMessage();
+
+    }
+
+);
+/* ==========================================
+   BOOKING SUBMIT
+========================================== */
 
 bookingForm.addEventListener(
 
-"submit",
+    "submit",
 
-submitBooking
+    submitBooking
 
 );
 
@@ -385,23 +630,49 @@ async function submitBooking(event){
 
     event.preventDefault();
 
+    clearMessage();
+
     if(!selectedDate){
 
-        bookingMessage.innerText=
+        showMessage(
 
-        "Please select a date.";
+            "Please select a date.",
+
+            "#ff6b6b"
+
+        );
 
         return;
 
     }
 
-    const formData=new FormData();
+    if(!time.value){
+
+        showMessage(
+
+            "Please select a time.",
+
+            "#ff6b6b"
+
+        );
+
+        return;
+
+    }
+
+    confirmButton.disabled = true;
+
+    confirmButton.innerHTML =
+
+    '<i class="fa-solid fa-spinner fa-spin"></i> Booking...';
+
+    const formData = new FormData();
 
     formData.append(
 
         "name",
 
-        document.getElementById("name").value
+        document.getElementById("name").value.trim()
 
     );
 
@@ -409,7 +680,7 @@ async function submitBooking(event){
 
         "email",
 
-        document.getElementById("email").value
+        document.getElementById("email").value.trim()
 
     );
 
@@ -417,7 +688,7 @@ async function submitBooking(event){
 
         "phone",
 
-        document.getElementById("phone").value
+        document.getElementById("phone").value.trim()
 
     );
 
@@ -465,7 +736,7 @@ async function submitBooking(event){
 
         "notes",
 
-        document.getElementById("notes").value
+        document.getElementById("notes").value.trim()
 
     );
 
@@ -483,15 +754,9 @@ async function submitBooking(event){
 
     try{
 
-        bookingMessage.innerText=
+        const response = await fetch(
 
-        "Submitting...";
-
-        const response=
-
-        await fetch(
-
-            API+"/book",
+            API + "/book",
 
             {
 
@@ -503,68 +768,276 @@ async function submitBooking(event){
 
         );
 
-        const data=
-
-        await response.json();
+        const data = await response.json();
 
         if(!data.success){
 
-            bookingMessage.innerText=
+            showMessage(
 
-            data.message ||
+                data.message,
 
-            "Booking failed.";
+                "#ff6b6b"
+
+            );
+
+            confirmButton.disabled = false;
+
+            confirmButton.innerHTML =
+
+            "Confirm Booking";
 
             return;
 
         }
 
-        bookingMessage.innerText=
+        showMessage(
 
-        "✅ Booking confirmed!";
+`<div style="font-size:22px;margin-bottom:8px;">✅</div>
+
+<strong>Booking Confirmed!</strong>
+
+<br><br>
+
+Booking ID:
+
+<strong>${data.booking.bookingId}</strong>
+
+<br><br>
+
+A confirmation email has been sent.`,
+
+"#69db7c"
+
+);
 
         bookingForm.reset();
 
-        preview.innerHTML="";
+        preview.innerHTML = "";
 
-        selectedDate=null;
+        selectedDate = null;
 
-        selectedDateInput.value="";
+        selectedDateInput.value = "";
 
-        time.innerHTML=
+        time.innerHTML =
 
         '<option value="">Select Time</option>';
 
+        await loadAppointments();
+
+        document
+
+        .querySelectorAll(".selected-date")
+
+        .forEach(day=>{
+
+            day.classList.remove(
+
+                "selected-date"
+
+            );
+
+        });
+
     }
 
-    catch(error){
+    catch(err){
 
-        console.error(error);
+        console.error(err);
 
-        bookingMessage.innerText=
+        showMessage(
 
-        "Unable to create booking.";
+            "Unable to create booking.",
+
+            "#ff6b6b"
+
+        );
 
     }
 
-}
+    finally{
 
-/*==================================================
-PAGE INITIALIZE
-==================================================*/
+        confirmButton.disabled = false;
 
-document.addEventListener(
+        confirmButton.innerHTML =
 
-"DOMContentLoaded",
+        "Confirm Booking";
 
-async()=>{
+    }
+
+}/* ==========================================
+   PAGE INITIALIZATION
+========================================== */
+
+async function initializePage(){
+
+    loadTattooTypes();
 
     loadPlacements();
 
     loadStyles();
 
-    await loadTattooTypes();
-
     initializeCalendar();
 
+    await loadAppointments();
+
+    applyTranslations();
+
+    bookingForm.classList.add(
+
+        "fade-in"
+
+    );
+
+}
+
+/* ==========================================
+   TRANSLATION REFRESH
+========================================== */
+
+function refreshLanguage(){
+
+    if(typeof applyTranslations==="function"){
+
+        applyTranslations();
+
+    }
+
+}
+
+/* ==========================================
+   MONTH CHANGED
+========================================== */
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    ()=>{
+
+        initializePage();
+
+    }
+
+);
+
+document.addEventListener(
+
+    "languageChanged",
+
+    ()=>{
+
+        refreshLanguage();
+
+    }
+
+);
+
+/* ==========================================
+   CALENDAR AUTO REFRESH
+========================================== */
+
+setInterval(
+
+    async()=>{
+
+        if(calendar){
+
+            await loadAppointments();
+
+        }
+
+    },
+
+    60000
+
+);
+
+/* ==========================================
+   PAGE ANIMATION
+========================================== */
+
+window.addEventListener(
+
+    "load",
+
+    ()=>{
+
+        document.body.classList.add(
+
+            "loaded"
+
+        );
+
+    }
+
+);
+
+/* ==========================================
+   SMALL UX IMPROVEMENTS
+========================================== */
+
+document
+
+.querySelectorAll(
+
+    "input, select, textarea"
+
+)
+
+.forEach(element=>{
+
+    element.addEventListener(
+
+        "focus",
+
+        ()=>{
+
+            element.parentElement?.classList.add(
+
+                "focused"
+
+            );
+
+        }
+
+    );
+
+    element.addEventListener(
+
+        "blur",
+
+        ()=>{
+
+            element.parentElement?.classList.remove(
+
+                "focused"
+
+            );
+
+        }
+
+    );
+
 });
+
+/* ==========================================
+   PREVENT DOUBLE SUBMIT
+========================================== */
+
+window.addEventListener(
+
+    "beforeunload",
+
+    ()=>{
+
+        confirmButton.disabled=true;
+
+    }
+
+);
+
+console.log(
+
+    "✅ Booking page initialized."
+
+);

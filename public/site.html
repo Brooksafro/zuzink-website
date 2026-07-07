@@ -1,859 +1,532 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZuzInk Tattoo Studio</title>
 
-    <meta charset="UTF-8">
+<style>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
 
-    <title>ZuzInk Tattoo Studio</title>
+body{
+    min-height:100vh;
+    overflow:hidden;
+    color:white;
 
-    <meta
-        name="description"
-        content="Fine Line Tattoo Studio in Bulgarovo">
+    background:
+    linear-gradient(
+        rgba(0,0,0,.60),
+        rgba(0,0,0,.60)
+    ),
+    url("images/background.jpg");
 
-    <!-- Google Fonts -->
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+/* FLAGS */
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+.languages{
+    position:absolute;
+    top:30px;
+    left:30px;
+    display:flex;
+    gap:15px;
+    z-index:100;
+}
 
-    <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
+.languages img{
+    width:45px;
+    height:30px;
+    cursor:pointer;
+    border-radius:5px;
+    transition:.3s;
+    box-shadow:0 3px 10px rgba(0,0,0,.4);
+}
 
-    <!-- Font Awesome -->
+.languages img:hover{
+    transform:scale(1.1);
+}
 
-    <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+/* CONTACTS */
 
-    <!-- CSS -->
+.contacts{
+    position:absolute;
+    top:30px;
+    right:40px;
+    text-align:right;
+    z-index:100;
+}
 
-    <link
-    rel="stylesheet"
-    href="css/main.css">
+.contacts p,
+.contacts a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    font-size:20px;
+    margin-bottom:12px;
+    text-shadow:0 3px 10px rgba(0,0,0,.5);
+}
 
+.contacts a:hover{
+    color:#ddd;
+}
+
+/* CENTER */
+
+.center{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+.logo{
+    width:260px;
+    margin-bottom:20px;
+    filter:drop-shadow(0 10px 20px rgba(0,0,0,.5));
+}
+
+.title{
+    font-size:70px;
+    font-weight:bold;
+    margin-bottom:20px;
+    text-shadow:0 5px 15px rgba(0,0,0,.6);
+}
+
+.address{
+    font-size:25px;
+    cursor:pointer;
+    display:inline-block;
+    position:relative;
+    text-shadow:0 3px 10px rgba(0,0,0,.6);
+}
+
+/* MAP */
+
+.map-popup{
+    display:none;
+    position:absolute;
+    top:50px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:350px;
+    height:250px;
+
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.6);
+    z-index:1000;
+}
+
+.map-popup iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+
+/* BUTTON */
+
+.book-btn{
+    position:absolute;
+    right:60px;
+    bottom:60px;
+
+    background:#800020;
+    color:white;
+
+    border:none;
+    padding:20px 45px;
+
+    border-radius:50px;
+
+    font-size:28px;
+    font-weight:bold;
+
+    cursor:pointer;
+    transition:.3s;
+
+    box-shadow:
+        0 0 25px rgba(128,0,32,.6);
+}
+
+.book-btn:hover{
+    transform:translateY(-4px);
+    background:#990026;
+}
+
+/* BOOKING PANEL */
+
+#bookingPanel{
+    position:fixed;
+    left:50%;
+    bottom:-100%;
+    transform:translateX(-50%);
+
+    width:95%;
+    height:85vh;
+
+    background:white;
+
+    border-radius:35px 35px 0 0;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 -15px 40px rgba(0,0,0,.6);
+
+    transition:.6s ease;
+
+    z-index:9999;
+}
+
+#bookingPanel.active{
+    bottom:0;
+}
+
+.panel-header{
+    height:70px;
+    background:#111827;
+    color:white;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 30px;
+}
+
+.panel-header h2{
+    font-size:28px;
+}
+
+.panel-header button{
+    background:none;
+    border:none;
+    color:white;
+    font-size:35px;
+    cursor:pointer;
+}
+
+#bookingPanel iframe{
+    width:100%;
+    height:calc(100% - 70px);
+    border:none;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .logo{
+        width:180px;
+    }
+
+    .title{
+        font-size:45px;
+    }
+
+    .contacts{
+        right:20px;
+    }
+
+    .book-btn{
+        right:20px;
+        bottom:20px;
+        font-size:22px;
+        padding:15px 30px;
+    }
+
+    .map-popup{
+        width:300px;
+        height:200px;
+    }
+}
+
+</style>
 </head>
-
 <body>
 
-<!-- =====================================
-     NAVBAR
-====================================== -->
+<!-- FLAGS -->
 
-<header class="navbar">
+<div class="languages">
+    <img src="images/uk.png" id="englishBtn">
+    <img src="images/bg.png" id="bulgarianBtn">
+</div>
 
-    <div class="logo">
+<!-- CONTACTS -->
 
-        ZUZINK
+<div class="contacts">
 
-    </div>
+    <p id="phoneText">
+        📞 +359 89 202 0065
+    </p>
 
-    <nav>
-
-        <a href="#home">Home</a>
-
-        <a href="#portfolio">Portfolio</a>
-
-        <a href="#artist">Artist</a>
-
-        <a href="#services">Services</a>
-
-        <a href="#contact">Contact</a>
-
-    </nav>
+    <a href="mailto:brooksafro@abv.bg">
+        <span id="emailText">
+            ✉️ brooksafro@abv.bg
+        </span>
+    </a>
 
     <a
-    href="booking.html"
-    class="bookButton">
+        href="https://www.instagram.com/zuz1nk/"
+        target="_blank">
 
-        Book Appointment
+        <span id="instagramText">
+            📷 @zuz1nk
+        </span>
 
     </a>
 
-</header>
+</div>
 
-<!-- =====================================
-     HERO
-====================================== -->
+<!-- CENTER -->
 
-<section
-id="home"
-class="hero">
+<div class="center">
 
-<div class="heroOverlay"></div>
+    <img
+        src="images/logo.png"
+        class="logo"
+        alt="Logo">
 
-<div class="heroContent">
+    <div class="title" id="titleText">
+        ZuzInk
+    </div>
 
-    <span class="subtitle">
+    <div
+        class="address"
+        id="addressBtn">
 
-        Minimal • Elegant • Timeless
+        <span id="addressText">
+            📍 Bulgarovo, ul. Dimcho Debelyanov 4
+        </span>
 
-    </span>
+        <div
+            class="map-popup"
+            id="mapPopup">
 
-    <h1>
+            <iframe
+                src="https://maps.google.com/maps?q=Bulgarovo%20ul%20Dimcho%20Debelyanov%204&t=&z=16&ie=UTF8&iwloc=&output=embed">
+            </iframe>
 
-        ZUZINK
-
-    </h1>
-
-    <h2>
-
-        Fine Line Tattoo Studio
-
-    </h2>
-
-    <p class="heroText">
-
-        Professional fine line tattoos,
-        custom artwork and premium quality
-        in a relaxed studio environment.
-
-    </p>
-
-    <div class="heroButtons">
-
-        <a
-        href="booking.html"
-        class="primaryButton">
-
-            Book Appointment
-
-        </a>
-
-        <a
-        href="#portfolio"
-        class="secondaryButton">
-
-            View Portfolio
-
-        </a>
+        </div>
 
     </div>
 
 </div>
 
-<div class="scrollIndicator">
-
-<i class="fa-solid fa-chevron-down"></i>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     PORTFOLIO
-====================================== -->
-
-<section
-id="portfolio"
-class="portfolio">
-
-<h2>
-
-Portfolio
-
-</h2>
-
-<p>
-
-Some of our recent work
-
-</p>
-
-<div class="gallery">
-
-<div class="galleryItem">
-
-<img
-src="images/tattoo1.png"
-alt="Tattoo">
-
-</div>
-
-<div class="galleryItem">
-
-<img
-src="images/tattoo2.png"
-alt="Tattoo">
-
-</div>
-
-<div class="galleryItem">
-
-<img
-src="images/tattoo3.png"
-alt="Tattoo">
-
-</div>
-
-<div class="galleryItem">
-
-<img
-src="images/tattoo4.png"
-alt="Tattoo">
-
-</div>
-
-<div class="galleryItem">
-
-<img
-src="images/tattoo5.png"
-alt="Tattoo">
-
-</div>
-
-<div class="galleryItem">
-
-<img
-src="images/tattoo6.png"
-alt="Tattoo">
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     ARTIST
-====================================== -->
-
-<section
-id="artist"
-class="artist">
-
-<div class="artistImage">
-
-<img
-src="images/artist.png"
-alt="Tattoo Artist">
-
-</div>
-
-<div class="artistContent">
-
-<span>
-
-ABOUT THE ARTIST
-
-</span>
-
-<h2>
-
-Hi, I'm Zuzu
-
-</h2>
-
-<p>
-
-I specialize in elegant fine line,
-minimalistic and custom tattoo designs.
-
-Every tattoo is carefully planned
-to match your style and personality.
-
-</p>
-
-<p>
-
-Your comfort, safety and satisfaction
-are always my highest priority.
-
-</p>
-
-<a
-href="booking.html"
-class="primaryButton">
-
-Book Your Session
-
-</a>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     SERVICES
-====================================== -->
-
-<section
-id="services"
-class="services">
-
-<h2>
-
-Services
-
-</h2>
-
-<div class="serviceGrid">
-
-<div class="serviceCard">
-
-<i class="fa-solid fa-pen-ruler"></i>
-
-<h3>
-
-Fine Line
-
-</h3>
-
-<p>
-
-Elegant and timeless tattoos
-with exceptional precision.
-
-</p>
-
-</div>
-
-<div class="serviceCard">
-
-<i class="fa-solid fa-palette"></i>
-
-<h3>
-
-Custom Designs
-
-</h3>
-
-<p>
-
-Every tattoo is designed
-specifically for you.
-
-</p>
-
-</div>
-
-<div class="serviceCard">
-
-<i class="fa-solid fa-shield-heart"></i>
-
-<h3>
-
-Safe & Sterile
-
-</h3>
-
-<p>
-
-Professional hygiene
-and premium equipment.
-
-</p>
-
-</div>
-
-<div class="serviceCard">
-
-<i class="fa-solid fa-gem"></i>
-
-<h3>
-
-Premium Ink
-
-</h3>
-
-<p>
-
-Long-lasting,
-high-quality pigments.
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     REVIEWS
-====================================== -->
-
-<section
-id="reviews"
-class="reviews">
-
-<h2>
-
-Client Reviews
-
-</h2>
-
-<p>
-
-Every tattoo tells a story.
-
-</p>
-
-<div class="reviewGrid">
-
-<div class="reviewCard">
-
-★★★★★
-
-<p>
-
-"Absolutely amazing experience.
-Professional, clean and incredibly detailed work."
-
-</p>
-
-<h4>
-
-Emily
-
-</h4>
-
-</div>
-
-<div class="reviewCard">
-
-★★★★★
-
-<p>
-
-"My first tattoo and I couldn't have asked
-for a better artist."
-
-</p>
-
-<h4>
-
-Martin
-
-</h4>
-
-</div>
-
-<div class="reviewCard">
-
-★★★★★
-
-<p>
-
-"Beautiful fine line work.
-Exactly what I imagined."
-
-</p>
-
-<h4>
-
-Sophia
-
-</h4>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     WHY CHOOSE US
-====================================== -->
-
-<section
-class="whyUs">
-
-<h2>
-
-Why Choose ZuzInk?
-
-</h2>
-
-<div class="whyGrid">
-
-<div>
-
-<i class="fa-solid fa-shield-heart"></i>
-
-<h3>
-
-Sterile Equipment
-
-</h3>
-
-<p>
-
-Every appointment follows
-strict hygiene standards.
-
-</p>
-
-</div>
-
-<div>
-
-<i class="fa-solid fa-pen-ruler"></i>
-
-<h3>
-
-Custom Designs
-
-</h3>
-
-<p>
-
-Every tattoo is unique
-and created for you.
-
-</p>
-
-</div>
-
-<div>
-
-<i class="fa-solid fa-gem"></i>
-
-<h3>
-
-Premium Materials
-
-</h3>
-
-<p>
-
-Only professional inks
-and equipment.
-
-</p>
-
-</div>
-
-<div>
-
-<i class="fa-solid fa-heart"></i>
-
-<h3>
-
-Passion
-
-</h3>
-
-<p>
-
-Every tattoo receives
-the same attention to detail.
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     FAQ
-====================================== -->
-
-<section
-id="faq"
-class="faq">
-
-<h2>
-
-Frequently Asked Questions
-
-</h2>
-
-<div class="faqItem">
-
-<button>
-
-Does getting tattooed hurt?
-
-</button>
-
-<div>
-
-Pain depends on placement,
-but every appointment is done
-as comfortably as possible.
-
-</div>
-
-</div>
-
-<div class="faqItem">
-
-<button>
-
-How should I prepare?
-
-</button>
-
-<div>
-
-Eat before your appointment,
-stay hydrated and avoid alcohol.
-
-</div>
-
-</div>
-
-<div class="faqItem">
-
-<button>
-
-How long does healing take?
-
-</button>
-
-<div>
-
-Usually between
-2 and 4 weeks.
-
-</div>
-
-</div>
-
-<div class="faqItem">
-
-<button>
-
-Can I bring my own design?
-
-</button>
-
-<div>
-
-Absolutely.
-Reference images are always welcome.
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     BOOK CTA
-====================================== -->
-
-<section
-class="bookingCTA">
-
-<h2>
-
-Ready for your next tattoo?
-
-</h2>
-
-<p>
-
-Let's create something beautiful together.
-
-</p>
-
-<a
-href="booking.html"
-class="primaryButton">
-
-Book Appointment
-
-</a>
-
-</section>
-
-<!-- =====================================
-     CONTACT
-====================================== -->
-
-<section
-id="contact"
-class="contact">
-
-<div class="contactInfo">
-
-<span>
-
-CONTACT
-
-</span>
-
-<h2>
-
-Let's Talk
-
-</h2>
-
-<p>
-
-Whether it's your first tattoo
-or your next masterpiece,
-I'd love to hear your idea.
-
-</p>
-
-<div class="contactItem">
-
-<i class="fa-solid fa-location-dot"></i>
-
-<div>
-
-<h4>
-
-Studio
-
-</h4>
-
-<p>
-
-Bulgarovo<br>
-
-ul. Dimcho Debelyanov 4
-
-</p>
-
-</div>
-
-</div>
-
-<div class="contactItem">
-
-<i class="fa-solid fa-phone"></i>
-
-<div>
-
-<h4>
-
-Phone
-
-</h4>
-
-<p>
-
-+359 89 202 0065
-
-</p>
-
-</div>
-
-</div>
-
-<div class="contactItem">
-
-<i class="fa-solid fa-envelope"></i>
-
-<div>
-
-<h4>
-
-Email
-
-</h4>
-
-<p>
-
-contact@zuzink.com
-
-</p>
-
-</div>
-
-</div>
-
-<div class="socials">
-
-<a href="#">
-
-<i class="fab fa-instagram"></i>
-
-</a>
-
-<a href="#">
-
-<i class="fab fa-facebook-f"></i>
-
-</a>
-
-<a href="#">
-
-<i class="fab fa-tiktok"></i>
-
-</a>
-
-</div>
-
-</div>
-
-<div class="contactMap">
-
-<iframe
-
-src="https://www.google.com/maps?q=Bulgarovo&output=embed"
-
-loading="lazy"
-
-allowfullscreen>
-
-</iframe>
-
-</div>
-
-</section>
-
-<!-- =====================================
-     FOOTER
-====================================== -->
-
-<footer>
-
-<div class="footerLogo">
-
-ZUZINK
-
-</div>
-
-<p>
-
-Fine Line Tattoo Studio
-
-</p>
-
-<div class="footerLinks">
-
-<a href="#home">Home</a>
-
-<a href="#portfolio">Portfolio</a>
-
-<a href="#services">Services</a>
-
-<a href="booking.html">Booking</a>
-
-</div>
-
-<p class="copyright">
-
-© 2026 ZuzInk Tattoo Studio.
-All Rights Reserved.
-
-</p>
-
-</footer>
+<!-- BOOK BUTTON -->
 
 <button
-id="scrollTop">
+    class="book-btn"
+    id="openBooking">
 
-<i class="fa-solid fa-arrow-up"></i>
+    <span id="bookText">
+        Book Online
+    </span>
 
 </button>
 
-<script src="js/site.js"></script>
+<!-- BOOKING PANEL -->
+
+<div id="bookingPanel">
+
+    <div class="panel-header">
+
+        <h2 id="popupTitle">
+            Book Online
+        </h2>
+
+        <button id="closeBooking">
+            ✕
+        </button>
+
+    </div>
+
+    <iframe src="booking.html"></iframe>
+
+</div>
+
+<script>
+
+/* TRANSLATIONS */
+
+const translations = {
+
+    en: {
+        title: "ZuzInk",
+        address:
+            "📍 Bulgarovo, ul. Dimcho Debelyanov 4",
+        phone:
+            "📞 +359 89 202 0065",
+        email:
+            "✉️ brooksafro@abv.bg",
+        instagram:
+            "📷 @zuz1nk",
+        book:
+            "Book Online",
+        popup:
+            "Book Online"
+    },
+
+    bg: {
+        title: "ZuzInk",
+        address:
+            "📍 Българово, ул. Димчо Дебелянов 4",
+        phone:
+            "📞 +359 89 202 0065",
+        email:
+            "✉️ brooksafro@abv.bg",
+        instagram:
+            "📷 @zuz1nk",
+        book:
+            "Запази час",
+        popup:
+            "Запази час"
+    }
+};
+
+function changeLanguage(lang){
+
+    document.getElementById(
+        "titleText"
+    ).innerText =
+        translations[lang].title;
+
+    document.getElementById(
+        "addressText"
+    ).innerText =
+        translations[lang].address;
+
+    document.getElementById(
+        "phoneText"
+    ).innerText =
+        translations[lang].phone;
+
+    document.getElementById(
+        "emailText"
+    ).innerText =
+        translations[lang].email;
+
+    document.getElementById(
+        "instagramText"
+    ).innerText =
+        translations[lang].instagram;
+
+    document.getElementById(
+        "bookText"
+    ).innerText =
+        translations[lang].book;
+
+    document.getElementById(
+        "popupTitle"
+    ).innerText =
+        translations[lang].popup;
+
+    localStorage.setItem(
+        "language",
+        lang
+    );
+}
+
+document
+.getElementById("englishBtn")
+.addEventListener(
+"click",
+() => changeLanguage("en")
+);
+
+document
+.getElementById("bulgarianBtn")
+.addEventListener(
+"click",
+() => changeLanguage("bg")
+);
+
+const saved =
+    localStorage.getItem(
+        "language"
+    ) || "en";
+
+changeLanguage(saved);
+
+/* MAP */
+
+const address =
+document.getElementById(
+    "addressBtn"
+);
+
+const map =
+document.getElementById(
+    "mapPopup"
+);
+
+address.addEventListener(
+"click",
+() => {
+
+    if (
+        map.style.display ===
+        "block"
+    ) {
+        map.style.display =
+        "none";
+    }
+    else {
+        map.style.display =
+        "block";
+    }
+
+});
+
+/* BOOKING PANEL */
+
+const bookingPanel =
+document.getElementById(
+    "bookingPanel"
+);
+
+document
+.getElementById(
+    "openBooking"
+)
+.addEventListener(
+"click",
+() => {
+
+    bookingPanel.classList.add(
+        "active"
+    );
+
+});
+
+document
+.getElementById(
+    "closeBooking"
+)
+.addEventListener(
+"click",
+() => {
+
+    bookingPanel.classList.remove(
+        "active"
+    );
+
+});
+
+</script>
 
 </body>
-
 </html>
