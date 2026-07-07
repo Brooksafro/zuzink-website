@@ -2,19 +2,21 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
 
-    host: "smtp.gmail.com",
+    host: "smtp-relay.brevo.com",
 
-    port: 465,
+    port: 587,
 
-    secure: true,
+    secure: false,
 
     auth: {
 
-        user: process.env.EMAIL_USER,
+         user: process.env.EMAIL_USER,
 
         pass: process.env.EMAIL_PASS
 
     },
+
+    requireTLS: true,
 
     connectionTimeout: 10000,
 
@@ -172,7 +174,7 @@ async function sendCustomerEmail(booking){
 
         const info = await transporter.sendMail({
 
-            from: process.env.EMAIL_USER,
+            from: "ZuzInk Tattoo Studio <brooksafro2@gmail.com>",
 
             to: booking.email,
 
@@ -292,9 +294,9 @@ async function sendStudioEmail(booking){
 
         const info = await transporter.sendMail({
 
-            from: process.env.EMAIL_USER,
+            from: "ZuzInk Tattoo Studio <brooksafro2@gmail.com>",
 
-            to: process.env.EMAIL_USER,
+            to: "brooksafro2@gmail.com",
 
             subject: `New Booking - ${booking.name}`,
 
@@ -378,7 +380,7 @@ async function sendCancellationEmail(booking){
 
     await transporter.sendMail({
 
-        from: process.env.EMAIL_USER,
+        from: "ZuzInk Tattoo Studio <brooksafro2@gmail.com>",
 
         to: booking.email,
 
