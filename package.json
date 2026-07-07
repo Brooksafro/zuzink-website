@@ -1,16 +1,18 @@
 {
   "name": "site",
   "version": "1.0.0",
-  "description": "",
-  "main": "Server.js",
+  "description": "ZuzInk Tattoo Studio",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
@@ -22,7 +24,7 @@
     "nodemailer": "^9.0.3",
     "socket.io": "^4.8.3",
     "sqlite": "^5.1.1",
-    "sqlite3": "^6.0.1",
+    "sqlite3": "^5.1.7",
     "uuid": "^14.0.1"
   }
 }
