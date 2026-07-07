@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>ZuzInk Admin</title>
+
+<link rel="stylesheet" href="css/admin.css">
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginPage">
+
+    <div class="loginBox">
+
+        <img src="images/logo.png" class="logo">
+
+        <h2>ZuzInk Admin</h2>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Admin Password">
+
+        <button id="loginBtn">
+            Login
+        </button>
+
+        <p id="loginError"></p>
+
+    </div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" style="display:none;">
+
+<header>
+
+    <h1>ZuzInk Dashboard</h1>
+
+    <button id="logoutBtn">
+        Logout
+    </button>
+
+</header>
+
+<div class="layout">
+
+    <!-- LEFT PANEL -->
+
+    <aside>
+
+        <h3>Today's Appointments</h3>
+
+        <div id="todayBookings">
+
+            Loading...
+
+        </div>
+
+        <div class="stats">
+
+            <h3>Statistics</h3>
+
+            <p>
+                Today:
+                <span id="todayCount">0</span>
+            </p>
+
+            <p>
+                Week:
+                <span id="weekCount">0</span>
+            </p>
+
+            <p>
+                Month:
+                <span id="monthCount">0</span>
+            </p>
+
+        </div>
+
+    </aside>
+
+    <!-- CALENDAR -->
+
+    <main>
+
+        <div id="calendar"></div>
+
+    </main>
+
+</div>
+
+<!-- BOOKING DETAILS -->
+
+<div id="bookingModal" class="modal">
+
+    <div class="modal-content">
+
+        <span
+            id="closeModal"
+            class="close">
+
+            &times;
+
+        </span>
+
+        <h2>Appointment Details</h2>
+
+        <div id="bookingInfo">
+
+        </div>
+
+        <div id="bookingImages">
+
+        </div>
+
+        <button id="cancelBookingBtn">
+
+            Cancel Appointment
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div id="settingsPanel">
+
+    <h2>Studio Settings</h2>
+
+    <div class="settingsGrid">
+
+        <div>
+
+            <h3>Opening Hours</h3>
+
+            <div id="openingHours">
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3>Tattoo Durations</h3>
+
+            <div id="tattooDurations">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <button id="saveSettings">
+
+        Save Settings
+
+    </button>
+
+</div>
+
+<!-- BOOKINGS -->
+
+<section id="allBookings">
+
+    <h2>All Bookings</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Time</th>
+
+                <th>Name</th>
+
+                <th>Tattoo</th>
+
+                <th>Placement</th>
+
+                <th>Status</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="bookingTable">
+
+        </tbody>
+
+    </table>
+
+</section>

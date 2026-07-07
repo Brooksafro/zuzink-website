@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>ZuzInk Booking</title>
+
+<link
+href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:#eef2f7;
+
+padding:25px;
+
+display:flex;
+
+justify-content:center;
+
+}
+
+.container{
+
+width:1200px;
+
+background:white;
+
+border-radius:15px;
+
+padding:20px;
+
+display:flex;
+
+gap:25px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+#calendar{
+
+width:760px;
+
+min-height:700px;
+
+}
+
+.form{
+
+width:360px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+}
+
+.form h2{
+
+text-align:center;
+
+margin-bottom:10px;
+
+color:#800020;
+
+}
+
+input,
+select,
+textarea{
+
+padding:12px;
+
+font-size:15px;
+
+border:1px solid #ccc;
+
+border-radius:8px;
+
+width:100%;
+
+}
+
+textarea{
+
+height:100px;
+
+resize:none;
+
+}
+
+button{
+
+padding:14px;
+
+font-size:18px;
+
+background:#800020;
+
+color:white;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+button:hover{
+
+background:#990026;
+
+}
+
+#msg{
+
+font-weight:bold;
+
+margin-top:10px;
+
+text-align:center;
+
+}
+
+.fc-daygrid-day.selected-date{
+
+background:#28a745 !important;
+
+}
+
+.fc-daygrid-day.selected-date
+.fc-daygrid-day-number{
+
+color:white !important;
+
+font-weight:bold;
+
+}
+
+.fc-daygrid-day.fully-booked{
+
+background:#ffc107 !important;
+
+}
+
+.fc-daygrid-day.fully-booked
+.fc-daygrid-day-number{
+
+color:black !important;
+
+}
+
+.fc-daygrid-day.past-date{
+
+background:#e5e7eb !important;
+
+}
+
+.fc-daygrid-day.past-date
+.fc-daygrid-day-number{
+
+color:#999 !important;
+
+}
+
+.preview{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:8px;
+
+margin-top:5px;
+
+}
+
+.preview img{
+
+width:70px;
+
+height:70px;
+
+object-fit:cover;
+
+border-radius:8px;
+
+border:2px solid #ddd;
+
+}
+
+@media(max-width:1000px){
+
+.container{
+
+flex-direction:column;
+
+width:100%;
+
+}
+
+#calendar{
+
+width:100%;
+
+}
+
+.form{
+
+width:100%;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="calendar"></div>
+
+<div class="form">
+
+<h2 id="bookingHeading">
+
+Book Tattoo Session
+
+</h2>
+
+<input
+id="name"
+placeholder="Name">
+
+<input
+id="email"
+placeholder="Email">
+
+<input
+id="phone"
+placeholder="Phone">
+
+<select id="tattooType">
+
+<option value="">
+
+Tattoo Size
+
+</option>
+
+<option>
+
+Fine Line Text
+
+</option>
+
+<option>
+
+5 cm
+
+</option>
+
+<option>
+
+10 cm
+
+</option>
+
+<option>
+
+15 cm
+
+</option>
+
+<option>
+
+20 cm
+
+</option>
+
+<option>
+
+Big Tattoo
+
+</option>
+
+</select>
+
+<select id="placement">
+
+<option value="">
+
+Placement
+
+</option>
+
+<option>💪 Arm</option>
+
+<option>🦾 Forearm</option>
+
+<option>✋ Hand</option>
+
+<option>🦵 Leg</option>
+
+<option>🦵 Thigh</option>
+
+<option>🦶 Foot</option>
+
+<option>🫀 Chest</option>
+
+<option>🪽 Back</option>
+
+<option>🦴 Shoulder</option>
+
+<option>🦢 Neck</option>
+
+<option>👂 Behind Ear</option>
+
+<option>🩻 Ribs</option>
+
+<option>✍️ Other</option>
+
+</select>
+
+<select id="style">
+
+<option value="">
+
+Tattoo Style
+
+</option>
+
+<option>
+
+Black & Grey
+
+</option>
+
+<option>
+
+Fine Line
+
+</option>
+
+<option>
+
+Realism
+
+</option>
+
+<option>
+
+Traditional
+
+</option>
+
+<option>
+
+Neo Traditional
+
+</option>
+
+<option>
+
+Anime
+
+</option>
+
+<option>
+
+Lettering
+
+</option>
+
+<option>
+
+Other
+
+</option>
+
+</select>
+
+<input
+id="date"
+readonly>
+
+<select id="time">
+
+<option>
+
+Select a date first
+
+</option>
+
+</select>
+
+<input
+type="file"
+id="referenceImages"
+multiple
+accept="image/*">
+
+<div
+class="preview"
+id="preview">
+
+</div>
+
+<textarea
+id="notes"
+placeholder="Notes">
+
+</textarea>
+
+<button
+id="confirmButton">
+
+Confirm Booking
+
+</button>
+
+<p id="msg"></p>
+</div>
+
+</div>
+
+<script>
+
+const API = "http://localhost:3000/api";
+
+const translations = {
+
+en:{
+
+heading:"Book Tattoo Session",
+
+name:"Name",
+
+email:"Email",
+
+phone:"Phone",
+
+size:"Tattoo Size",
+
+placement:"Placement",
+
+style:"Tattoo Style",
+
+date:"Select a Date",
+
+time:"Select Time",
+
+notes:"Notes",
+
+confirm:"Confirm Booking",
+
+upload:"Reference Images",
+
+success:"Booking confirmed!",
+
+complete:"Please complete all required fields."
+
+},
+
+bg:{
+
+heading:"Запази час",
+
+name:"Име",
+
+email:"Имейл",
+
+phone:"Телефон",
+
+size:"Размер",
+
+placement:"Място",
+
+style:"Стил",
+
+date:"Изберете дата",
+
+time:"Изберете час",
+
+notes:"Бележки",
+
+confirm:"Запази час",
+
+upload:"Снимки",
+
+success:"Часът е запазен!",
+
+complete:"Попълнете всички полета."
+
+}
+
+};
+
+const lang =
+localStorage.getItem("language") || "en";
+
+const t =
+translations[lang];
+
+document.getElementById(
+"bookingHeading"
+).innerText=t.heading;
+
+document.getElementById(
+"name"
+).placeholder=t.name;
+
+document.getElementById(
+"email"
+).placeholder=t.email;
+
+document.getElementById(
+"phone"
+).placeholder=t.phone;
+
+document.getElementById(
+"notes"
+).placeholder=t.notes;
+
+document.getElementById(
+"confirmButton"
+).innerText=t.confirm;
+
+/* IMAGE PREVIEW */
+
+const preview =
+document.getElementById(
+"preview"
+);
+
+document
+.getElementById(
+"referenceImages"
+)
+.addEventListener(
+"change",
+function(){
+
+preview.innerHTML="";
+
+const files=[...this.files];
+
+files.slice(0,5).forEach(file=>{
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+const img=document.createElement("img");
+
+img.src=e.target.result;
+
+preview.appendChild(img);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+});
+
+const slots=[
+
+"09:00",
+"09:30",
+"10:00",
+"10:30",
+"11:00",
+"11:30",
+"12:00",
+"12:30",
+"13:00",
+"13:30",
+"14:00",
+"14:30",
+"15:00",
+"15:30",
+"16:00",
+"16:30",
+"17:00",
+"17:30"
+
+];
+
+let calendar;
+
+let selectedDate=null;
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+loadCalendar
+
+);
+
+async function loadCalendar(){
+
+const res=
+
+await fetch(
+
+API+"/appointments"
+
+);
+
+const appointments=
+
+await res.json();
+
+calendar=
+
+new FullCalendar.Calendar(
+
+document.getElementById(
+
+"calendar"
+
+),
+
+{
+
+initialView:
+
+"dayGridMonth",
+
+dateClick:
+
+selectDate,
+
+events:
+
+appointments.map(
+
+a=>({
+
+title:
+
+"Booked",
+
+date:
+
+a.start,
+
+color:"#800020"
+
+})
+
+)
+
+}
+
+);
+
+calendar.render();
+
+}
+async function selectDate(info){
+
+selectedDate=info.dateStr;
+
+document.getElementById(
+"date"
+).value=selectedDate;
+
+const tattooType=
+document.getElementById(
+"tattooType"
+).value;
+
+if(!tattooType){
+
+document.getElementById(
+"time"
+).innerHTML=
+"<option>Select tattoo size first</option>";
+
+return;
+
+}
+
+const res=
+await fetch(
+
+API+
+"/available-slots?date="+
+selectedDate+
+"&tattooType="+
+encodeURIComponent(
+tattooType
+)
+
+);
+
+const slots=
+await res.json();
+
+const select=
+document.getElementById(
+"time"
+);
+
+select.innerHTML="";
+
+if(!slots.length){
+
+select.innerHTML=
+"<option>No available times</option>";
+
+return;
+
+}
+
+slots.forEach(slot=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=slot;
+
+option.textContent=slot;
+
+select.appendChild(option);
+
+});
+
+}
+
+document
+.getElementById(
+"tattooType"
+)
+.addEventListener(
+"change",
+()=>{
+
+if(selectedDate){
+
+selectDate({
+
+dateStr:selectedDate
+
+});
+
+}
+
+});
+
+document
+.getElementById(
+"confirmButton"
+)
+.addEventListener(
+"click",
+bookAppointment
+);
+
+async function bookAppointment(){
+
+const formData=
+new FormData();
+
+const name=
+document.getElementById(
+"name"
+).value;
+
+const email=
+document.getElementById(
+"email"
+).value;
+
+const phone=
+document.getElementById(
+"phone"
+).value;
+
+const tattooType=
+document.getElementById(
+"tattooType"
+).value;
+
+const placement=
+document.getElementById(
+"placement"
+).value;
+
+const style=
+document.getElementById(
+"style"
+).value;
+
+const date=
+document.getElementById(
+"date"
+).value;
+
+const time=
+document.getElementById(
+"time"
+).value;
+
+const notes=
+document.getElementById(
+"notes"
+).value;
+
+if(
+
+!name||
+
+!email||
+
+!phone||
+
+!tattooType||
+
+!placement||
+
+!style||
+
+!date||
+
+!time
+
+){
+
+document.getElementById(
+"msg"
+).innerHTML=
+t.complete;
+
+return;
+
+}
+
+formData.append(
+"name",
+name
+);
+
+formData.append(
+"email",
+email
+);
+
+formData.append(
+"phone",
+phone
+);
+
+formData.append(
+"tattooType",
+tattooType
+);
+
+formData.append(
+"placement",
+placement
+);
+
+formData.append(
+"style",
+style
+);
+
+formData.append(
+"date",
+date
+);
+
+formData.append(
+"time",
+time
+);
+
+formData.append(
+"notes",
+notes
+);
+
+const files=
+
+document
+.getElementById(
+"referenceImages"
+)
+.files;
+
+for(
+
+let i=0;
+
+i<files.length&&i<5;
+
+i++
+
+){
+
+formData.append(
+
+"referenceImage",
+
+files[i]
+
+);
+
+}
+
+const res=
+
+await fetch(
+
+API+"/book",
+
+{
+
+method:"POST",
+
+body:formData
+
+}
+
+);
+
+const data=
+
+await res.json();
+
+document.getElementById(
+
+"msg"
+
+).innerHTML=
+
+data.message;
+
+if(data.success){
+
+setTimeout(
+
+()=>{
+
+location.reload();
+
+},
+
+1500
+
+);
+
+}
+
+}
