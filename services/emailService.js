@@ -168,6 +168,7 @@ async function sendCustomerEmail(booking){
     console.log("➡ Starting customer email...");
 
     try {
+        console.log("📧 Sending confirmation to:", booking.email);
 
         const info = await transporter.sendMail({
 
