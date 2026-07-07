@@ -599,8 +599,12 @@ attachments:req.files || []
    Send Emails
 -------------------------- */
 
- await sendCustomerEmail(emailBooking);
- await sendStudioEmail(emailBooking);
+try {
+    await sendCustomerEmail(emailBooking);
+    await sendStudioEmail(emailBooking);
+} catch (err) {
+    console.error("Email sending failed:", err);
+}
 
 /* -------------------------
    Delete Temp Files
